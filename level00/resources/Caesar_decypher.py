@@ -1,18 +1,15 @@
 import string
 
-def caesar_cypher(cypher_text, shit):
+def caesar_cipher(cipher_text, shift):
     decrypted = ''
-    for char in cypher_text:
-        if char in string.ascii_lowercase:
-            decrypted += chr((ord(char) - ord('a') - shift) % 26 + ord('a'))
-        else:
-            decrypted += char
+    for char in cipher_text:
+        alphabet_index = ord(char) - ord('a')
+        alphabet_index = (alphabet_index + shift) % 26
+        shifted_character = chr(ord('a') + alphabet_index)
+        decrypted += shifted_character 
     return decrypted
 
+cipher_text = "cdiiddwpgswtgt"
 
-cypher_text = "cdiiddwpgswtgt"
-
-print("Trying all the shifts possible for caesar cypher :", cypher_text);
 for shift in range(1, 26):
-    decrypted = caesar_cypher(cypher_text, shift)
-    print("shift {:2}: {}".format(shift, decrypted))
+    print(f"shift {shift:2}: {caesar_cipher(cipher_text, shift)}")

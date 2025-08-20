@@ -1,48 +1,19 @@
-# level 02
 
-during this level we have been provided with a pcap file "level02.pcap" which is a packet capture file we have to analyze it using wireshark and follow the tcp stream we found this
+# Level 02
 
-```
-..%
-..%
-..&..... ..#..'..$
-..&..... ..#..'..$
-.. .....#.....'.........
-.. .38400,38400....#.SodaCan:0....'..DISPLAY.SodaCan:0......xterm..
-........"........!
-........"..".....b........b....	B.
-..............................1.......!
-.."....
-.."....
-..!..........."
-........"
-..".............	..
-.....................
-Linux 2.6.38-8-generic-pae (::ffff:10.1.1.2) (pts/10)
+**Objective:**  
+Analyze the provided `level02.pcap` packet capture file and identify any credentials.
 
-..wwwbugs login:
-l
-.l
-e
-.e
-v
-.v
-e
-.e
-l
-.l
-X
-.X
+**Analysis:**  
+I opened the file in Wireshark and filtered the traffic by following a TCP stream (`Right Click → Follow → TCP Stream`).  
+Within the stream, I observed a Telnet login session. Telnet transmits data in plaintext, which allowed me to see the credentials directly.
 
+![](/level02/resources/images/image.png)
 
-..
-Password:
-ft_wandr...NDRel.L0L
+**Extracted Credentials:**
 
-.
-..
-Login incorrect
-wwwbugs login:
-```
+Username: levelXX  
+Password: ft_wandrNDRelL0L  
 
-the password was in plane text
+**Conclusion:**  
+The login information was transmitted without encryption, allowing an attacker to capture the credentials by sniffing the network traffic.

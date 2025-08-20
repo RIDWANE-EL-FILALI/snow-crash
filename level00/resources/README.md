@@ -1,39 +1,40 @@
+# Level 00
 
-# level 00
-in this level just like any other ctf
-we ran a search for the files owned by the user flag00
+**Objective:**  
+Find the password for `flag00`.
 
-using
+**Analysis:**  
+We searched in  the filesystem for files owned by `flag00`:
 
+Among the results, we found a file `/usr/sbin/john` and `/rofs/usr/sbin/john` owned by `flag00`:
 ```
 ls -la $(find / -user flag00 2>/dev/null)
 ----r--r-- 1 flag00 flag00 15 Mar  5  2016 /rofs/usr/sbin/john
 ----r--r-- 1 flag00 flag00 15 Mar  5  2016 /usr/sbin/john
 ```
 
-normal search for files owned by that specific user
+Inspecting the files revealed the following string: `cdiiddwpgswtg`
 
-after trying the key we got. the key was denied and after a certain time searching we found out that the key was encrypted using caecar cypher since all the characters where intact and readable
+The text consisted entirely of lowercase letters, suggesting a substitution cipher. Given the uniform letter set, we suspected a **Caesar cipher**.
 
-```
+**Cracking Process:**  
+We wrote a Python script to test all possible Caesar cipher shifts:
+
+```python
 import string
 
-def caesar_cypher(cypher_text, shit):
+def caesar_cipher(cipher_text, shift):
     decrypted = ''
-    for char in cypher_text:
-        if char in string.ascii_lowercase:
-            decrypted += chr((ord(char) - ord('a') - shift) % 26 + ord('a'))
-        else:
-            decrypted += char
+    for char in cipher_text:
+        alphabet_index = ord(char) - ord('a')
+        alphabet_index = (alphabet_index + number) % 26
+        shifted_character = chr(ord('a') + alphabet_index)
+        decrypted += shifted_character 
     return decrypted
 
+cipher_text = "cdiiddwpgswtgt"
 
-cypher_text = "cdiiddwpgswtgt"
-
-print("Trying all the shifts possible for caesar cypher :", cypher_text);
-for shift in range(1, 26):
-    decrypted = caesar_cypher(cypher_text, shift)
-    print("shift {:2}: {}".format(shift, decrypted))
+for shift in range(1, 25):
+    print(f"shift {shift:2}: {caesar_cipher(cipher_text, shift)}")
 ```
-
-reshift the characters backward from 1 to 25 testing and found the right one in the 15th shift
+From the 25 shifts we found the only meaninful string : `nottoohardhere`

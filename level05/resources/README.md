@@ -14,6 +14,15 @@ The challenge involves exploiting a scheduled task (cron job) that automatically
 
 Upon entering this level, we discover an email file containing information about an automated task:
 
+![](image.png)
+
+
+>Linux typically stores local system emails in files within the /var/spool/mail/ or /var/mail/ directories, with the file name matching the user's username
+
+
+Checking the 2 directories we find `/var/spool/mail` is a symlink to `/var/mail` which contains a file with the level's name
+
+
 **Cron Job Configuration:**
 ```bash
 */2 * * * * su -c "sh /usr/sbin/openarenaserver" - flag05
@@ -33,6 +42,11 @@ Upon entering this level, we discover an email file containing information about
 ✅ **Key Finding:** Script `/usr/sbin/openarenaserver` runs every 2 minutes with `flag05` privileges.
 
 ### **Permission Analysis**
+
+```bash
+ll /usr/sbin/openarenaserver
+-rwxr-x---+ 1 flag05 flag05 94 Mar  5  2016 /usr/sbin/openarenaserver*
+```
 
 Attempting to examine the script reveals interesting permission behavior:
 
@@ -147,40 +161,10 @@ cat /var/crash/test.txt
 
 The cron job successfully executes our injected script with `flag05` privileges, and the flag is written to our specified output file.
 
-**Execution Timeline:**
-1. **T+0:** Script placed in `/opt/openarenaserver/`
-2. **T+≤2min:** Cron job triggers execution
-3. **T+≤2min+5sec:** Script execution completes (5-second ulimit)
-4. **T+≤2min+5sec:** Output file contains flag
-5. **T+≤2min+6sec:** Original script file is deleted
+
 
 ## Conclusion
 
 **Vulnerability Summary:**
 This level demonstrates a privilege escalation vulnerability through insecure cron job configuration that automatically executes user-controlled files with elevated privileges.
 
-**Attack Vector Analysis:**
-
-| Component | Vulnerability | Exploitation Method |
-|-----------|---------------|-------------------|
-| **Cron Job** | Runs with elevated privileges | Leveraged for privilege escalation |
-| **Directory Monitoring** | Executes all files in directory | File injection attack vector |
-| **File Permissions** | Write access to monitored directory | Payload deployment mechanism |
-| **ACL Configuration** | Read access to script source | Information disclosure for analysis |
-
-**Security Lessons:**
-1. **Cron Security:** Scheduled tasks should not execute user-controlled content
-2. **Directory Permissions:** Monitored directories must have restricted write access
-3. **Privilege Separation:** Automated processes should run with minimal privileges
-4. **Input Validation:** Scripts should validate content before execution
-
-**Mitigation Strategies:**
-- **Restricted Directories:** Use directories with limited write permissions
-- **File Validation:** Implement content verification before execution
-- **Privilege Dropping:** Execute scripts with reduced privileges
-- **Logging and Monitoring:** Track all automated script executions
-- **Secure Defaults:** Avoid executing arbitrary files from shared directories
-
-**Attack Classification:** Scheduled Task Privilege Escalation
-
-**Flag Retrieved:** Successfully obtained `flag05` credentials through cron job exploitation.

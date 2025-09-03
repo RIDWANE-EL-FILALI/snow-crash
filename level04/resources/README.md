@@ -176,12 +176,3 @@ This level demonstrates a critical command injection vulnerability in a Perl CGI
 2. **Privilege Separation:** Avoid setuid/setgid for web-facing applications
 3. **Safe Execution:** Use parameterized commands instead of shell interpretation
 4. **Defense in Depth:** Implement multiple layers of security controls
-
-**Mitigation Strategies:**
-- **Input Validation:** Whitelist allowed characters and patterns
-- **Parameterized Execution:** Use `system()` with array arguments
-- **Privilege Dropping:** Reduce privileges before processing user input
-- **Sandboxing:** Isolate CGI scripts in restricted environments
-- **Web Application Firewalls:** Filter malicious request patterns
-
-**Attack Classification:** Remote Command Injection with Privilege Escalation

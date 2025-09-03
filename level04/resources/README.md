@@ -58,7 +58,7 @@ x(param("x"));
 | `param("x")` | Retrieves 'x' parameter | GET/POST data directly accessed |
 | `sub x` | Processing function | Takes user input as argument |
 | `$y = $_[0]` | Variable assignment | No input validation performed |
-| `print \`echo $y 2>&1\`` | Command execution | **CRITICAL: Direct shell execution** |
+| `print echo $y 2>&1` | Command execution | **CRITICAL: Direct shell execution** |
 
 ### **Vulnerability Assessment**
 

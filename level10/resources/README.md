@@ -54,16 +54,16 @@ The program connected to the port and wrote something that look like a face or a
 
 Let's trace the library calls made by the program to understand what it does
 
-Inspecting strings in the binary:
+![image1](./image-15.png)
 
 
 
-* This hinted that the binary:
+Here is the major instructions done by the program :
 
 1. Performs an access check (access())
-2. Sends it over the network (connect())
-3. Opens the file (open()) 
-
+2. Connect to a listening socket on port 6969
+3. Opens the file (open())
+4. reads the data contained in the file and write it to the socket
 
 
 ## Identifying the Vulnerability
@@ -80,7 +80,11 @@ Check (access)  →  Use (open/read)
 
 # Exploit Strategy
 
-The idea behind this exploit is utilize the time between acessing the file and opening it for reading we already know that the file is allower to be read by flag10 we just need to create a symlink to a file we have access to and when it passed the access syscall then we switch it to point to the token file. we'll create an infinite loop to do exactly that 
+The idea behind this exploit is utilize the time between acessing the file and opening it for reading we already know that the file is allower to be read by flag10 we just need to create a symlink to a file we have access to and when it passed the access syscall then we switch it to point to the token file.
+
+## Method 1
+
+We'll create an infinite loop to do exactly that 
 ```
 #!/bin/bash
 
@@ -111,6 +115,9 @@ done
 so as we can see the flag is captured just in the right time when it switches the link to point to the token
 
 ![image5](./image5.png)
+
+## Method 2
+
 
 
 

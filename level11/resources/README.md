@@ -2,12 +2,12 @@
 
 ## Level Overview
 
-Category: Remote Exploitation / Command Injection
+**Category:** Remote Exploitation / Command Injection
 
-Description:
-We are given a Lua socket server running on 127.0.0.1:5151. The server accepts a password and compares its SHA1 hash to a hardcoded value. If the hash matches, the user “wins.” However, the hashing function uses insecure shell execution, which opens the door to command injection and allows arbitrary command execution on the box.
+**Description:**
+We are given a Lua socket server running on **127.0.0.1:5151**. The server accepts a password and compares its SHA1 hash to a hardcoded value. If the hash matches, the user “wins.” However, the hashing function uses insecure shell execution, which opens the door to command injection and allows arbitrary command execution on the box.
 
-The whole script is pointless and does not have a point except bein exploited
+The whole script is pointless and does not have a point except being exploited
 cause even if you got the hash cracked. the password will not work either way and even if it did it wil only print a dump message
 
 ```lua
@@ -95,16 +95,15 @@ Confirming command injection.
 
 ![image1](./image1.png)
 
-## Exploit Strategy
+## Exploitation
 
 The strategy is simple:
 
-1.Connect to the server
+1. Connect to the server
 
-2.Inject a command after the password input.
+2. Inject a command after the password input.
 
-3.run the getflag command as flag11 and past it in a file
+3. run the getflag command as flag11 and past it in a file
 
-## Exploitation
 
 ![image2](./image2.png)

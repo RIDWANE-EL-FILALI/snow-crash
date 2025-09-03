@@ -1,4 +1,4 @@
-# Level10 – SUID TOCTOU Exploit
+# Level10 Writeup
 ## Level Overview
 
 **Category: Privilege Escalation / SUID Exploit**

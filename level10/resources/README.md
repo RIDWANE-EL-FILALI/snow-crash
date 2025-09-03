@@ -3,29 +3,59 @@
 
 **Category: Privilege Escalation / SUID Exploit**
 
-Description:
+**Description:**
 The level10 binary is owned by flag10 and has the SUID bit set. It allows sending files to another host, but only if the user has “access” to the file. The goal is to retrieve the token file owned by flag10, which the current user (level10) cannot normally read.
 
-![image1](./image1.png)
 
-## Observations
+## Analysis
 * The binary has SUID set → runs as flag10.
 
 * The token is readable only by flag10.
 
-* Running the binary normally:
+![image1](./image1.png)
+
+Executing the program without arguments results in message that we should provide a file and a host
+```
+level10@SnowCrash:~$ ./level10
+./level10 file host
+	sends file to host if you have access to it
+```
+Let's pass the token file and the loop back address as the host. 
+
+Since we don't the read permission for the file the program outputs `You don't have access to token`
 
 ```
-./level10 token 127.0.0.1
+level10@SnowCrash:~$ ./level10 token 127.0.0.1
 You don't have access to token
 ```
 
-Inspecting strings in the binary:
+Let's create a file with some data and retry
 
 ```
-strings ./level10 | egrep -i "connect|access|open"
+level10@SnowCrash:~$ ./level10 /tmp/token 127.0.0.1
+Connecting to 127.0.0.1:6969 .. Unable to connect to host 127.0.0.1
 ```
-![image2](./image2.png)
+The program tries to connect to the port 6969, but there is nothing to connect to
+
+We can listen to upcomming connection on port 6969 using `netcat`
+
+```
+level10@SnowCrash:~$ ./level10 /tmp/token 127.0.0.1
+Connecting to 127.0.0.1:6969 .. Connected!
+Sending file .. wrote file!
+```
+```
+level10@SnowCrash:~$ nc -l 6969
+.*( )*.
+content
+```
+
+The program connected to the port and wrote something that look like a face or a regex pattern and the content of the file
+
+Let's trace the library calls made by the program to understand what it does
+
+Inspecting strings in the binary:
+
 
 
 * This hinted that the binary:

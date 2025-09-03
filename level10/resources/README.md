@@ -30,9 +30,10 @@ strings ./level10 | egrep -i "connect|access|open"
 
 * This hinted that the binary:
 
-    1.Performs an access check (access())
-    2.Opens the file (open())
-    3.Sends it over the network (connect())
+1. Performs an access check (access())
+2. Sends it over the network (connect())
+3. Opens the file (open()) 
+
 
 
 ## Identifying the Vulnerability

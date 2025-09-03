@@ -14,14 +14,14 @@ The challenge requires exploiting a binary executable to gain elevated privilege
 
 Upon entering this level, we discover a 32-bit executable named `level03` with specific ownership and permissions:
 
-![information about the file using ls -la command](/level03/resources/images/permissions.png)
+![information about the file using ls -la command](./images/permissions.png)
 
 **File Properties:**
 - **Owner:** `flag03` user
 - **Permissions:** `-rws` (SUID bit set)
 - **Significance:** Executable runs with `flag03` privileges regardless of who executes it
 
-![type of the file using file command](/level03/resources/images/type.png)
+![type of the file using file command](./images/type.png)
 
 **Binary Analysis:**
 - **Architecture:** 32-bit ELF executable
@@ -32,7 +32,7 @@ Upon entering this level, we discover a 32-bit executable named `level03` with s
 
 Executing the program reveals its basic functionality:
 
-![output of the binary when executed](/level03/resources/images/output.png)
+![output of the binary when executed](./images/output.png)
 
 **Execution Results:**
 - **Output:** "Exploit me"
@@ -43,7 +43,7 @@ Executing the program reveals its basic functionality:
 
 Using `ltrace` to trace library calls reveals the program's internal operations:
 
-![output of function calls of level03 binary with ltrace](/level03/resources/images/ltrace.png)
+![output of function calls of level03 binary with ltrace](./images/ltrace.png)
 
 **Key Findings:**
 - **System Call:** `system("/usr/bin/env echo Exploit me")`
@@ -114,7 +114,7 @@ PATH=/path_to_our_echo:$PATH
 
 Running the `level03` binary now triggers our PATH hijacking attack:
 
-![output of the binary exploited showing the password](/level03/resources/images/password.png)
+![output of the binary exploited showing the password](./images/password.png)
 
 **Exploitation Success:**
 - **Trigger:** Execute original `level03` binary

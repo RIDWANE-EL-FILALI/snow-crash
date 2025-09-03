@@ -10,7 +10,7 @@ At first glance, the challenge looks simple: just run `./level08 token`. However
 
 ---
 
-## Initial Recon
+## Analysis
 
 We begin by tracing the binary with `ltrace` to see which library calls it makes:  
 
@@ -84,7 +84,8 @@ Since the check only applies to filenames, we can bypass it by using a **symboli
 ln -s token /var/crash/bokan
 ```
 
-This failed because the relative symlink pointed to `/var/crash/token`, which does not exist.
+>This failed because the relative symlink pointed to `/var/crash/token`, which does not exist.
+that is because ln behaves differently when you do not put the absolute path of the file to link to, it causes it to search in the same repo for the file names token and link to it if it did not exist it creates a broken link.
 
 ---
 
@@ -112,7 +113,7 @@ Finally, we run the binary with the symlink:
 
 ---
 
-## Key Takeaways
+## Conclusion
 
 * The binary filters **only by filename**, not contents.
 * `ltrace` is a quick way to spot simple string checks.

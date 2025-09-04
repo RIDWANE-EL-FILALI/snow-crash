@@ -1,9 +1,14 @@
-# level01
+# 📜 Level01 Writeup
 
-in this level we searched the /etc/passwd and found out that the password hash for the flag01 was exposed and
-its old system thing usually in modern systems password hashes are never stored in the /etc/passwd file
+## Level Overview
 
-```
+**Category:** Password Hash Cracking
+
+**Description:**
+
+The challenge requires finding the password for `flag01`. During the filesystem investigation, we examined the `/etc/passwd` file and discovered an unusual configuration: the password hash for `flag01` was directly exposed in the file, which is a legacy practice from older Unix systems.
+
+```bash
 level00@SnowCrash:~$ cat /etc/passwd
 root:x:0:0:root:/root:/bin/bash
 daemon:x:1:1:daemon:/usr/sbin:/bin/sh
@@ -61,9 +66,46 @@ flag13:x:3013:3013::/home/flag/flag13:/bin/bash
 flag14:x:3014:3014::/home/flag/flag14:/bin/bash
 ```
 
-to crack the hash we used john the reaper tool with the default word list. the hash algo is
-DES-based crypt, which is the classic Unix password hashing method used in older /etc/passwd files.
+The key observation is the `flag01` entry:
 ```
+flag01:42hDRfypTqqnw:3001:3001::/home/flag/flag01:/bin/bash
+```
+
+## Analysis
+
+### **Legacy Password Storage**
+
+**Historical Context:** In older Unix systems, password hashes were stored directly in `/etc/passwd`. This practice was phased out for security reasons, as the passwd file is readable by all users.
+
+**Modern Systems:** Contemporary systems use shadow passwords (`/etc/shadow`) to store hashes with restricted access permissions.
+
+**Security Implications:**
+1. **Public Accessibility:** Any user can read `/etc/passwd`, exposing password hashes
+2. **Offline Attacks:** Attackers can copy hashes and perform dictionary/brute-force attacks
+3. **Weak Hashing:** Legacy systems often used weaker algorithms like DES-based crypt
+
+### **Hash Identification**
+
+The hash `42hDRfypTqqnw` exhibits characteristics of DES-based crypt:
+
+| Property | Value | Analysis |
+|----------|--------|----------|
+| Length | 13 characters | Standard DES crypt length (2 salt + 11 hash) |
+| Character Set | `[a-zA-Z0-9./]` | Classic crypt alphabet |
+| Format | No prefix | DES crypt (unlike `$1$` for MD5, `$6$` for SHA-512) |
+| Salt | `42` | First 2 characters represent the salt |
+
+✅ **Conclusion:** DES-based crypt hash from legacy Unix system.
+
+### **Cracking Process**
+
+We used John the Ripper with its default wordlist to crack the hash. The process involved:
+
+1. **Hash Extraction:** Save the hash in proper format for John
+2. **Algorithm Detection:** John automatically identified it as `descrypt`
+3. **Dictionary Attack:** Used built-in wordlist for common passwords
+
+```bash
 ➜  level01 git:(master) ✗ john flag
 Using default input encoding: UTF-8
 Loaded 1 password hash (descrypt, traditional crypt(3) [DES 512/512 AVX512F])
@@ -77,3 +119,25 @@ abcdefg          (?)
 Use the "--show" option to display all of the cracked passwords reliably
 Session completed.
 ```
+
+**Attack Statistics:**
+- **Success Rate:** 1 hash cracked out of 1 (100%)
+- **Time:** Less than 1 second
+- **Method:** Dictionary attack with wordlist
+- **Speed:** ~750,933 passwords/second
+
+## Conclusion
+
+The `flag01` user had their password hash exposed in `/etc/passwd` due to legacy system configuration. The hash used the weak DES-based crypt algorithm, making it vulnerable to rapid dictionary attacks.
+
+**Vulnerability Chain:**
+1. **Exposed hash** in publicly readable `/etc/passwd`
+2. **Weak algorithm** (DES crypt vs. modern bcrypt/scrypt)
+3. **Weak password** found in common wordlists
+
+**Password Cracked:** 
+```
+abcdefg
+```
+
+**Security Lesson:** This demonstrates why modern systems use shadow passwords and stronger hashing algorithms to protect user credentials.

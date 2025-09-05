@@ -11,15 +11,15 @@ Exploit a setuid binary that uses environment variables in an unsafe `system()` 
 
 Upon Entering this level we find a `32 bit executable` owned by the user `flag07` and has setuid bit set
 
-![alt text](image-2.png)
+![alt text](images/image-2.png)
 
 Executing the binary outputs `level07`
 
-![alt text](image-3.png)
+![alt text](images/image-3.png)
 
 let's try to analyze more the binary and use `ltrace` to display the library calls made by the program
 
-![alt text](image-4.png)
+![alt text](images/image-4.png)
 
 Going through the output of `ltrace` the program  does the following instructions : 
 
@@ -32,7 +32,7 @@ Going through the output of `ltrace` the program  does the following instruction
 
 Changin the value of `LOGNAME` reflects on the output meaning the program prints the value of `LOGNAME`
 
-![alt text](image-5.png)
+![alt text](images/image-5.png)
 
 
 The vulnerability appears in `getenv()` function we can inject some code in `LOGNAME`  environment variable and it expandes inside the system parameter and gets excuted.
@@ -53,7 +53,7 @@ The Process of exploiting this program is to inject `LOGNAME` with `;getflag`
 
 The `echo` function will try to print any thing before the `;` and getflag will executed  `system(/bin/echo ; getflag)`
 
-![alt text](image-1.png)
+![alt text](images/image-1.png)
 
 and voila `getflag` got executed and we got the password for the next level
 

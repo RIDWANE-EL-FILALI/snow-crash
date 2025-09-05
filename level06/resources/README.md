@@ -1,4 +1,4 @@
-# Level06
+# Level06 Writeup
 
 ## Level Overview
 
@@ -104,14 +104,14 @@ Now let's try to create a file `/tmp/command` that's going to passed as the firs
 
 The payload works by:
 
-- The regex matches `[x ${getflag}]`
-- The second capture group contains `${getflag}`
-- The replacement becomes `y("${getflag}")`
+- The regex matches **[x ${\`getflag\`}]**
+- The second capture group contains **${\`getflag\`}**
+- The replacement becomes **y("${\`getflag\`}")**
 - The `/e` modifier evaluates this as PHP code
-- PHP evaluates `${getflag}` as an expression, executing the getflag command
+- PHP evaluates **${\`getflag\`}** as an expression, executing the getflag command
 - The command runs with `flag06` privileges due to the setuid bit
 
-![alt text](image.png)
+![alt text](images/image.png)
 
 and we got the password for the next level.
 

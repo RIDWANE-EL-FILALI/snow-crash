@@ -111,7 +111,7 @@ The payload works by:
 - PHP evaluates **${\`getflag\`}** as an expression, executing the getflag command
 - The command runs with `flag06` privileges due to the setuid bit
 
-![alt text](images/image.png)
+![alt text](images/image-20.png)
 
 and we got the password for the next level.
 

@@ -64,11 +64,11 @@ Breakpoint 2 at 0x804894a
 
 Explanation:
 
-1.`catch syscall ptrace` → stop when the binary calls `ptrace`.
-2.`command 1` → automatically run commands when the catchpoint triggers:
+1. `catch syscall ptrace` → stop when the binary calls `ptrace`.
+2. `command 1` → automatically run commands when the catchpoint triggers:
     * `set $eax = 0` → fake the return value of `ptrace` to indicate success.
     * `continue` → resume execution.
-3.Break at `main` for further inspection
+3. Break at `main` for further inspection
 
 ## Adjusting the UID Check
 After bypassing the `ptrace` check, the binary checks some internal value (like UID) before giving the flag. We set it manually:

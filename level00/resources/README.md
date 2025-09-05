@@ -71,7 +71,7 @@ for shift in range(1, 26):
 ```
 From testing all 25 shifts, the only meaningful plaintext produced was:
 ```
-nottoohardhere
+************* 
 ```
 
 ## Conclusion
@@ -80,5 +80,5 @@ The string `"cdiiddwpgswtg"` was not a hashed password nor modern encryption, bu
 
 **Flag / Password:**
 ```
-nottoohardhere
+*************
 ```

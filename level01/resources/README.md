@@ -114,7 +114,7 @@ Proceeding with single, rules:Single
 Press 'q' or Ctrl-C to abort, almost any other key for status
 Almost done: Processing the remaining buffered candidate passwords, if any.
 Proceeding with wordlist:/usr/share/john/password.lst
-abcdefg          (?)
+******          (?)
 1g 0:00:00:00 DONE 2/3 (2025-08-09 15:29) 16.66g/s 750933p/s 750933c/s 750933C/s 123456..perry8
 Use the "--show" option to display all of the cracked passwords reliably
 Session completed.
@@ -137,7 +137,7 @@ The `flag01` user had their password hash exposed in `/etc/passwd` due to legacy
 
 **Password Cracked:** 
 ```
-abcdefg
+********
 ```
 
 **Security Lesson:** This demonstrates why modern systems use shadow passwords and stronger hashing algorithms to protect user credentials.

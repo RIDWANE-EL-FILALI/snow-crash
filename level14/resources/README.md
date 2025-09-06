@@ -34,25 +34,6 @@ long ptrace(enum __ptrace_request request, pid_t pid, void *addr, void *data);
 - **PTRACE_DETACH**: Detach from traced process
 - **PTRACE_KILL**: Terminate the traced process
 
-#### Execution Control Requests
-- **PTRACE_CONT**: Continue execution of traced process
-- **PTRACE_SINGLESTEP**: Execute one instruction, then stop
-- **PTRACE_SYSCALL**: Continue until next system call entry/exit
-
-#### Memory Access Requests
-- **PTRACE_PEEKTEXT**: Read word from process text segment
-- **PTRACE_PEEKDATA**: Read word from process data segment
-- **PTRACE_PEEKUSER**: Read word from process user area (registers, etc.)
-- **PTRACE_POKETEXT**: Write word to process text segment
-- **PTRACE_POKEDATA**: Write word to process data segment
-- **PTRACE_POKEUSER**: Write word to process user area
-
-#### Register Access Requests
-- **PTRACE_GETREGS**: Get all general-purpose registers
-- **PTRACE_SETREGS**: Set all general-purpose registers
-- **PTRACE_GETFPREGS**: Get floating-point registers
-- **PTRACE_SETFPREGS**: Set floating-point registers
-
 ### Anti-Debugging with PTRACE_TRACEME
 
 #### How PTRACE_TRACEME Works for Anti-Debugging
